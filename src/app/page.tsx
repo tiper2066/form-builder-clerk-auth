@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default function Home() {
     return (
@@ -12,7 +13,26 @@ export default function Home() {
                 </div>
             </header>
             {/* 컨텐츠 영역: 헤더제외한 전체 높이 설정 */}
-            <div className='bg-blue-50 flex-1'>Main</div>
+            <div className='bg-blue-50 flex-1'>
+                {/*  동적 너비(container) 설정  */}
+                <div className='container mx-auto px-4 py-20 text-center'>
+                    {/* ----- 페이지 타이틀 ----- */}
+                    <h2 className='text-4xl ms:text-6xl font-bold mb-6'>
+                        Create Custom Forms with Ease
+                    </h2>
+                    {/* ----- 페이지 설명 : 최대 672 너비 ----- */}
+                    <p className='text-lg md:text-xl text-gray-700 mb-8 max-w-2xl mx-auto'>
+                        Build forms, collect responses, and analyze data - all
+                        in one platform.
+                    </p>
+                    {/* ----- 폼생성 버튼 ----- */}
+                    <Button asChild size='lg'>
+                        <Link href='/dashboard/forms/create'>
+                            Create a Form
+                        </Link>
+                    </Button>
+                </div>
+            </div>
         </div>
     );
 }

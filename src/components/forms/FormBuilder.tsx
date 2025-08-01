@@ -88,20 +88,21 @@ const FormBuilder = () => {
         try {
             setIsSubmitting(true);
             // 지연 효과 시물레이팅
-            await new Promise((resolve) => setTimeout(resolve, 2000)); // 2초 지연 테스트
+            // await new Promise((resolve) => setTimeout(resolve, 2000)); // 2초 지연 테스트
 
             // const url = isEditing
             //     ? `/api/forms/${initialData?.id}`
             //     : '/api/forms';
             // const method = isEditing ? 'PUT' : 'POST';
 
-            // const response = await fetch(url, {
-            //     method,
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify(form),
-            // });
+            // *********************** api 요청으로 폼 데이터 전달
+            const response = await fetch('/api/forms', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(form),
+            });
 
             // if (!response.ok) {
             //     const error = await response.text();

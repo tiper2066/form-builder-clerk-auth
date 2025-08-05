@@ -104,21 +104,25 @@ const FormBuilder = () => {
                 body: JSON.stringify(form),
             });
 
-            // if (!response.ok) {
-            //     const error = await response.text();
-            //     throw new Error(error);
-            // }
+            if (!response.ok) {
+                const error = await response.text();
+                throw new Error(error); // 오류는 catch(error)에 전달
+            }
 
-            // const data = await response.json();
-            // toast.success(isEditing ? 'Form updated!' : 'Form created!', {
-            //     description: 'Your form has been saved successfully.',
-            // });
-            // router.push(`/dashboard/forms/${data.id}`);
-            // router.refresh();
+            // 성공 시 JSON 데이터(from 테이블데이터)를 변수로 만들고
+            const data = await response.json();
+
+            // 성공 메시지를 출력하고...
+            toast.success('Form created!', {
+                description: 'Your form has been saved successfully.',
+            });
+
+            router.push(`/dashboard/forms/${data.id}`); // 성공 후 해당 폼 상세 페이지로 이동함
+            // router.refresh(); // 현재 라우트를 새로고침함(폼 추가 목록 갱신) ********************** 이 코드를 push 뒤에 놓으면... 경로 이동이 안되었음 ㅠ.ㅠ
         } catch (error) {
             console.error('Error saving form:', error);
             toast.error('Error', {
-                description: 'Something went wrong while saving your form.',
+                description: 'Something went wrong while saving your form.', // 에러 메시지 출력
             });
         } finally {
             setIsSubmitting(false);

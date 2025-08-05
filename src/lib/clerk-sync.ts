@@ -30,7 +30,7 @@ export async function syncUserWithDatabase() {
                 username: user.username || user.firstName || 'user',
             },
         });
-        console.log('User synced with database:', dbUser.id); // 콘솔에 싱크완료된 사용자 id 출력
+        // console.log('User synced with database:', dbUser.id); // 콘솔에 싱크완료된 사용자 id 출력
         return dbUser; // 싱크 완료된 사용자 정보 반환
     } catch (error) {
         console.error('Error syncing user with database:', error);

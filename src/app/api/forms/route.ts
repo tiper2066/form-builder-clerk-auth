@@ -14,7 +14,6 @@ export async function POST(req: Request) {
     // userId 가 있다면.... title, description, questions 추출
     const { title, description, questions } = await req.json();
 
-    /*
     // 추출된 title 정보가 없다면... title 필요함 에러 반환
     if (!title) {
         return new NextResponse('Title is required', { status: 400 });
@@ -44,7 +43,6 @@ export async function POST(req: Request) {
             questions: true,
         },
     });
-    */
 
     return NextResponse.json({ title, description, questions });
 }

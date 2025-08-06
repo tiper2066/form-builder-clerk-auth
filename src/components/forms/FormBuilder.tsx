@@ -15,7 +15,7 @@ type Question = {
 };
 // ************************ FormBuilderProps 타입 선언
 type FormBuilderProps = {
-    initialData: {
+    initialData?: {
         id?: string;
         title: string;
         description: string | null;

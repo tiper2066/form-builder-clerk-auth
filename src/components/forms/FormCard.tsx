@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import DeleteFormButton from '@/components/forms/DeleteFormButton';
 
 type FormCardProps = {
     id: string;
@@ -53,9 +54,7 @@ const FormCard = ({
                         Responses
                     </Link>
                 </Button>
-                <Button className='flex-1' variant='destructive'>
-                    Delete
-                </Button>
+                <DeleteFormButton formId={id} />
             </CardFooter>
         </Card>
     );

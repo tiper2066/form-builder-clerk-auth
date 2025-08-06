@@ -8,21 +8,30 @@ import { v4 as uuid } from 'uuid'; //  uuid 모듈
 import { toast } from 'sonner'; //  sonner 모듈
 import { useRouter } from 'next/navigation'; //  useRouter 훅
 
-// type formBuilderProps = {
-//     title: string;
-//     description: string;
-//     questions: { id: string; text: string }[];
-// };
-
-// const FormBuilder = ({ title, description, questions }: formBuilderProps) => {
-const FormBuilder = () => {
+// ************************ Question 타입 선언
+type Question = {
+    id: string;
+    text: string;
+};
+// ************************ FormBuilderProps 타입 선언
+type FormBuilderProps = {
+    initialData: {
+        id?: string;
+        title: string;
+        description: string | null;
+        questions: Question[];
+    };
+    isEditing?: boolean;
+};
+// ************************ FormBuilderProps 타입을 받는 함수로 수정
+const FormBuilder = ({ initialData, isEditing = false }: FormBuilderProps) => {
     const router = useRouter(); //  useRouter 객체 생성
     const [isSubmitting, setIsSubmitting] = useState(false); //  submit 전송 여부 상태
-    // props 에서 추출한 값으로 값설정: 기본값 추가
+    // ************************* props 에서 추출한 값으로 값설정: 기본값 변경
     const [form, setForm] = useState({
-        title: '',
-        description: '',
-        questions: [
+        title: initialData?.title || '',
+        description: initialData?.description || '',
+        questions: initialData?.questions || [
             {
                 id: '1', // 1 부터 시작
                 text: '',
@@ -87,17 +96,17 @@ const FormBuilder = () => {
 
         try {
             setIsSubmitting(true);
-            // 지연 효과 시물레이팅
-            // await new Promise((resolve) => setTimeout(resolve, 2000)); // 2초 지연 테스트
 
-            // const url = isEditing
-            //     ? `/api/forms/${initialData?.id}`
-            //     : '/api/forms';
-            // const method = isEditing ? 'PUT' : 'POST';
+            // ************************************* Edit 인지 Create 인지 여부에 따라 경로 설정하기
+            const url = isEditing
+                ? `/api/forms/${initialData?.id}` // Edit 경우
+                : '/api/forms'; // Create 경우
+            const method = isEditing ? 'PUT' : 'POST'; // Edit 이면 PUT, Create 이면 POST 으로 설정
 
-            // *********************** api 요청으로 폼 데이터 전달
-            const response = await fetch('/api/forms', {
-                method: 'POST',
+            // ************************************* Edit / Create 여부에 따라 api 요청으로 폼 데이터 전달
+            // ------------------------------ Edit / Create 여부에 따라 설정한 url 변수로 api 요청
+            const response = await fetch(url, {
+                method: method, // ----------------------------Edit / Create 여부에 따라 설정한 method로 api 요청 으로 설정
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -112,13 +121,13 @@ const FormBuilder = () => {
             // 성공 시 JSON 데이터(from 테이블데이터)를 변수로 만들고
             const data = await response.json();
 
-            // 성공 메시지를 출력하고...
-            toast.success('Form created!', {
+            // ---------------------------- Edit / Create 여부에 따라 성공 메시지를 출력하고...
+            toast.success(isEditing ? 'Form updated!' : 'Form created!', {
                 description: 'Your form has been saved successfully.',
             });
 
             router.push(`/dashboard/forms/${data.id}`); // 성공 후 해당 폼 상세 페이지로 이동함
-            // router.refresh(); // 현재 라우트를 새로고침함(폼 추가 목록 갱신) ********************** 이 코드를 push 뒤에 놓으면... 경로 이동이 안되었음 ㅠ.ㅠ
+            // router.refresh(); // 현재 라우트를 새로고침함(폼 추가 목록 갱신) - 이 코드를 push 뒤에 놓으면... 경로 이동이 안되었음 ㅠ.ㅠ
         } catch (error) {
             console.error('Error saving form:', error);
             toast.error('Error', {
@@ -223,9 +232,13 @@ const FormBuilder = () => {
                 >
                     Cancel
                 </Button>
-                {/*  전송 여부에 따른 Submint 버튼 설정  */}
+                {/*  *************************** Edit 인지 Create 인지, 전송 여부에 따른 Submint 버튼 설정  */}
                 <Button type='submit' disabled={isSubmitting}>
-                    {isSubmitting ? 'Saving...' : 'Create Form'}
+                    {isSubmitting
+                        ? 'Saving...'
+                        : isEditing
+                        ? 'Update Form'
+                        : 'Create Form'}
                 </Button>
             </div>
         </form>
